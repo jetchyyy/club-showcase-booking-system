@@ -13,8 +13,10 @@ const CustomerLandingPage = () => {
     <div className="min-h-screen bg-black">
       <CursorFollower />
       <Hero onBookNow={() => setShowBooking(true)} />
-      <Features />
-      <Gallery />
+      <main>
+        <Features />
+        <Gallery />
+      </main>
       <Footer />
       {showBooking && <TableBooking onClose={() => setShowBooking(false)} />}
     </div>

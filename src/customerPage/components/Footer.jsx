@@ -6,9 +6,9 @@ const Footer = () => {
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           <div>
-            <h3 className="text-2xl font-bold text-white mb-4 bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-            PARE RANGERS
-            </h3>
+                <h3 className="text-2xl font-bold text-white mb-4 bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+                YOUR CLUB
+                </h3>
             <p className="text-gray-400">
               Experience the ultimate nightlife in the heart of Cebu City.
             </p>
@@ -45,7 +45,7 @@ const Footer = () => {
 
         <div className="border-t border-purple-500/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-400 text-sm">
-            © 2025 PARE RANGERS. All rights reserved.
+              © 2025 YOUR CLUB. All rights reserved.
           </p>
           <div className="flex gap-4">
             <a

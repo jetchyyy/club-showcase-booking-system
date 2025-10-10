@@ -14,7 +14,7 @@ const Hero = ({ onBookNow }) => {
   }, []);
 
   return (
-    <div className="relative h-screen overflow-hidden bg-gradient-to-br from-purple-900 via-pink-800 to-orange-700">
+    <header className="relative h-screen overflow-hidden bg-gradient-to-br from-purple-900 via-pink-800 to-orange-700">
       <FloatingParticles />
 
       <div
@@ -29,14 +29,15 @@ const Hero = ({ onBookNow }) => {
 
       <div className="relative h-full flex items-center justify-center px-4">
         <div className="text-center text-white max-w-4xl">
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center mb-6" aria-hidden="true">
             <Sparkles className="w-16 h-16 text-pink-400 animate-pulse" />
           </div>
 
-    <AnimatedText
-  text="PARE RANGERS"
-  className="text-6xl md:text-8xl font-bold mb-6"
-/>
+          <AnimatedText
+                    text="YOUR CLUB"
+                    className="text-6xl md:text-8xl font-bold mb-6"
+                  />
+                  <h1 className="sr-only">Your club - Cebu's Premier Nightlife Destination</h1>
           <p className="text-xl md:text-2xl mb-8 text-gray-200">
             Cebu's Premier Nightlife Destination
           </p>
@@ -47,18 +48,19 @@ const Hero = ({ onBookNow }) => {
           <MagneticButton
             onClick={onBookNow}
             className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-12 py-4 rounded-full text-lg font-semibold transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-pink-500/50"
+            aria-label="Book your VIP table now"
           >
             Book Your Table Now
           </MagneticButton>
         </div>
       </div>
 
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce" aria-hidden="true">
         <div className="w-6 h-10 border-2 border-white rounded-full flex items-start justify-center p-2">
           <div className="w-1 h-3 bg-white rounded-full" />
         </div>
       </div>
-    </div>
+    </header>
   );
 };
 

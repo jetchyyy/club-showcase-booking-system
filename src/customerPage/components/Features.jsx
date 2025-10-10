@@ -26,28 +26,28 @@ const Features = () => {
   ];
 
   return (
-    <div className="py-20 px-4 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden">
+    <section className="py-20 px-4 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden" aria-labelledby="features-heading">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-white">
+          <h2 id="features-heading" className="text-4xl md:text-5xl font-bold text-center mb-16 text-white">
           Why Choose{' '}
           <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-            Pare Rangers
+            Your club
           </span>
         </h2>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, idx) => (
             <TiltCard key={idx}>
-              <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 backdrop-blur-sm p-8 rounded-2xl border border-purple-500/20 hover:border-pink-500/50 transition-all duration-300 hover:scale-105">
-                <div className="text-pink-400 mb-4">{feature.icon}</div>
+              <article className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 backdrop-blur-sm p-8 rounded-2xl border border-purple-500/20 hover:border-pink-500/50 transition-all duration-300 hover:scale-105">
+                <div className="text-pink-400 mb-4" aria-hidden="true">{feature.icon}</div>
                 <h3 className="text-xl font-semibold mb-3 text-white">{feature.title}</h3>
                 <p className="text-gray-300">{feature.description}</p>
-              </div>
+              </article>
             </TiltCard>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
