@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Calendar, Clock, Users, DollarSign } from 'lucide-react';
+import floorPlanImage from '../../assets/AGWATable.png';
 
-const TableBooking = ({ onClose }) => {
+const TableBooking = ({ onClose, prefilledDate = '' }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -13,34 +14,53 @@ const TableBooking = ({ onClose }) => {
     tableNumber: null
   });
 
+  // Update date when prefilledDate prop changes
+  useEffect(() => {
+    if (prefilledDate) {
+      setFormData(prev => ({
+        ...prev,
+        date: prefilledDate
+      }));
+    }
+  }, [prefilledDate]);
+
   const tables = [
-    { id: 'standard', name: 'Standard Table', price: '₱5,000', capacity: '4-6 people' },
-    { id: 'vip', name: 'VIP Table', price: '₱10,000', capacity: '6-8 people' },
-    { id: 'premium', name: 'Premium VIP', price: '₱15,000', capacity: '8-10 people' }
+    { id: 'ct', name: 'Cocktail Table', price: '₱1,500', capacity: '2-4 people' },
+    { id: 'sc', name: 'Standard Circle', price: '₱2,500', capacity: '4-6 people' },
+    { id: 'vip', name: 'VIP Table', price: '₱4,500', capacity: '6-8 people' },
+    { id: 'vvip', name: 'VVIP Table', price: '₱6,000', capacity: '8-10 people' }
   ];
 
-  // Club layout with tables
-  const clubTables = [
-    // Dance Floor Area (Standard Tables)
-    { id: 1, type: 'standard', x: 15, y: 60, booked: false },
-    { id: 2, type: 'standard', x: 85, y: 60, booked: false },
-    { id: 3, type: 'standard', x: 15, y: 80, booked: true },
-    { id: 4, type: 'standard', x: 85, y: 80, booked: false },
+  // Define coordinates and labels (based on actual floor plan)
+  const areas = [
+    // LEFT SIDE VIP BOOTHS (VIP1-VIP5)
+    { id: "VIP1", top: "12%", left: "26%", type: "vip", booked: false },
+    { id: "VVIP2", top: "12%", left: "8%", type: "vvip", booked: false },
+    { id: "VIP2", top: "25%", left: "26%", type: "vip", booked: false },
+    { id: "VIP3", top: "42%", left: "26%", type: "vip", booked: true },
+    { id: "VIP4", top: "59%", left: "26%", type: "vip", booked: false },
+    { id: "VVIP1", top: "60%", left: "7%", type: "vvip", booked: false },
     
-    // Side VIP Tables
-    { id: 5, type: 'vip', x: 10, y: 30, booked: false },
-    { id: 6, type: 'vip', x: 90, y: 30, booked: false },
-    { id: 7, type: 'vip', x: 10, y: 45, booked: true },
-    { id: 8, type: 'vip', x: 90, y: 45, booked: false },
-    
-    // Premium VIP Tables (Top area)
-    { id: 9, type: 'premium', x: 35, y: 15, booked: false },
-    { id: 10, type: 'premium', x: 65, y: 15, booked: false },
+    // RIGHT SIDE ELEMENTS
+    { id: "VIP9", top: "12%", left: "75%", type: "vvip", booked: false },
+    { id: "VIP10", top: "43%", left: "92%", type: "vip", booked: true },
+    { id: "SC1", top: "25%", left: "72%", type: "sc", booked: false },
+    { id: "SC2", top: "25%", left: "83%", type: "sc", booked: false },
+    { id: "SC3", top: "43%", left: "83%", type: "sc", booked: false },
+    { id: "SC4", top: "43%", left: "72%", type: "sc", booked: true },
+    { id: "VVIP3", top: "12%", left: "92%", type: "vvip", booked: true },
+
+    // BOTTOM CENTER (VIPS + SC)
+    { id: "VIPS1", top: "85%", left: "35%", type: "vvip", booked: false },
+    { id: "VIPS2", top: "92%", left: "50%", type: "vvip", booked: false },
+    { id: "VIPS3", top: "85%", left: "65%", type: "vvip", booked: false },
+    { id: "SC5", top: "78%", left: "50%", type: "sc", booked: false },
+    { id: "SC6", top: "73%", left: "26%", type: "sc", booked: false },
   ];
 
-  const handleTableClick = (table) => {
-    if (!table.booked) {
-      setFormData({ ...formData, tableType: table.type, tableNumber: table.id });
+  const handleAreaClick = (area) => {
+    if (!area.booked) {
+      setFormData({ ...formData, tableType: area.type, tableNumber: area.id });
     }
   };
 
@@ -60,12 +80,12 @@ const TableBooking = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gradient-to-br from-gray-900 to-black border border-purple-500/30 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-gradient-to-r from-purple-900 to-pink-900 p-6 flex justify-between items-center rounded-t-3xl">
+      <div className="bg-gradient-to-br from-[#140f2d] to-black border border-[#cccbd0]/30 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-gradient-to-r from-[#140f2d] to-purple-900 p-6 flex justify-between items-center rounded-t-3xl">
           <h2 className="text-3xl font-bold text-white">Book Your Table</h2>
           <button
             onClick={onClose}
-            className="text-white hover:text-pink-300 transition-colors"
+            className="text-white hover:text-[#cccbd0] transition-colors"
           >
             <X className="w-8 h-8" />
           </button>
@@ -82,7 +102,7 @@ const TableBooking = ({ onClose }) => {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full bg-gray-800/50 border border-purple-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-pink-500 transition-colors"
+                className="w-full bg-gray-800/50 border border-[#cccbd0]/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#cccbd0] transition-colors"
                 placeholder="Juan Dela Cruz"
               />
             </div>
@@ -95,7 +115,7 @@ const TableBooking = ({ onClose }) => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full bg-gray-800/50 border border-purple-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-pink-500 transition-colors"
+                className="w-full bg-gray-800/50 border border-[#cccbd0]/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#cccbd0] transition-colors"
                 placeholder="juan@example.com"
               />
             </div>
@@ -110,7 +130,7 @@ const TableBooking = ({ onClose }) => {
               value={formData.phone}
               onChange={handleChange}
               required
-              className="w-full bg-gray-800/50 border border-purple-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-pink-500 transition-colors"
+              className="w-full bg-gray-800/50 border border-[#cccbd0]/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#cccbd0] transition-colors"
               placeholder="+63 912 345 6789"
             />
           </div>
@@ -127,7 +147,7 @@ const TableBooking = ({ onClose }) => {
                 value={formData.date}
                 onChange={handleChange}
                 required
-                className="w-full bg-gray-800/50 border border-purple-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-pink-500 transition-colors"
+                className="w-full bg-gray-800/50 border border-[#cccbd0]/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#cccbd0] transition-colors"
               />
             </div>
 
@@ -140,7 +160,7 @@ const TableBooking = ({ onClose }) => {
                 value={formData.time}
                 onChange={handleChange}
                 required
-                className="w-full bg-gray-800/50 border border-purple-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-pink-500 transition-colors"
+                className="w-full bg-gray-800/50 border border-[#cccbd0]/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#cccbd0] transition-colors"
               >
                 <option value="">Select</option>
                 <option value="22:00">10:00 PM</option>
@@ -162,7 +182,7 @@ const TableBooking = ({ onClose }) => {
                 required
                 min="1"
                 max="20"
-                className="w-full bg-gray-800/50 border border-purple-500/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-pink-500 transition-colors"
+                className="w-full bg-gray-800/50 border border-[#cccbd0]/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#cccbd0] transition-colors"
                 placeholder="4"
               />
             </div>
@@ -174,114 +194,119 @@ const TableBooking = ({ onClose }) => {
               <DollarSign className="w-4 h-4" /> Select Your Table
             </label>
             
-            {/* Club Blueprint */}
-            <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 mb-4 border-2 border-purple-500/30">
-              <div className="relative w-full aspect-[4/3] bg-gray-900 rounded-lg border-2 border-dashed border-purple-500/50 overflow-hidden">
-                {/* DJ Booth */}
-                <div className="absolute top-2 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-4 py-2 rounded text-xs font-bold">
-                  DJ BOOTH
-                </div>
-                
-                {/* Dance Floor */}
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-32 border-4 border-pink-500/40 rounded-lg flex items-center justify-center">
-                  <span className="text-pink-400 font-bold text-sm">DANCE FLOOR</span>
-                </div>
-                
-                {/* Bar */}
-                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-amber-600 text-white px-6 py-2 rounded text-xs font-bold">
-                  BAR
-                </div>
-                
-                {/* Tables */}
-                {clubTables.map((table) => {
-                  const tableInfo = tables.find(t => t.id === table.type);
-                  const isSelected = formData.tableNumber === table.id;
+            {/* Club Floor Map */}
+            <div className="bg-gradient-to-br from-[#140f2d] to-gray-900 rounded-xl p-6 mb-4 border-2 border-[#cccbd0]/30">
+              <div className="relative w-full max-w-4xl mx-auto">
+                {/* Background Image */}
+                <img
+                  src={floorPlanImage}
+                  alt="Club Floor Map"
+                  className="w-full rounded-lg shadow-lg opacity-90"
+                  onError={(e) => {
+                    // Fallback to gradient background if image fails to load
+                    e.target.style.display = 'none';
+                    e.target.parentElement.style.background = 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)';
+                    e.target.parentElement.style.minHeight = '400px';
+                  }}
+                />
+
+                {/* Hotspots */}
+                {areas.map((area) => {
+                  const isSelected = formData.tableNumber === area.id;
                   
                   return (
-                    <div
-                      key={table.id}
-                      onClick={() => handleTableClick(table)}
-                      className={`absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-300 ${
-                        table.booked 
-                          ? 'opacity-40 cursor-not-allowed' 
-                          : 'hover:scale-110'
+                    <button
+                      key={area.id}
+                      onClick={() => handleAreaClick(area)}
+                      className={`absolute w-10 h-10 text-xs font-bold text-white rounded-full border-2 flex items-center justify-center transition-all duration-300 hover:scale-110 ${
+                        area.booked 
+                          ? 'bg-red-500 border-red-400 cursor-not-allowed opacity-60'
+                          : isSelected
+                          ? 'bg-[#cccbd0] border-white text-[#140f2d] shadow-lg shadow-[#cccbd0]/50'
+                          : area.type === 'vip'
+                          ? 'bg-purple-500 border-purple-400 hover:bg-purple-400'
+                          : area.type === 'vvip'
+                          ? 'bg-gradient-to-br from-purple-600 to-pink-600 border-purple-400 hover:from-purple-500 hover:to-pink-500'
+                          : area.type === 'sc'
+                          ? 'bg-blue-500 border-blue-400 hover:bg-blue-400'
+                          : 'bg-[#140f2d] border-[#cccbd0] hover:bg-[#140f2d]/80'
                       }`}
-                      style={{ left: `${table.x}%`, top: `${table.y}%` }}
+                      style={{
+                        top: area.top,
+                        left: area.left,
+                        transform: "translate(-50%, -50%)",
+                      }}
+                      disabled={area.booked}
                     >
-                      <div className={`relative ${
-                        table.type === 'standard' ? 'w-12 h-12' : 
-                        table.type === 'vip' ? 'w-14 h-14' : 
-                        'w-16 h-16'
-                      }`}>
-                        {/* Table Circle */}
-                        <div className={`w-full h-full rounded-full border-4 flex items-center justify-center font-bold text-white transition-all ${
-                          table.booked 
-                            ? 'bg-gray-600 border-gray-500' 
-                            : isSelected
-                            ? 'bg-pink-600 border-pink-400 shadow-lg shadow-pink-500/50'
-                            : table.type === 'standard'
-                            ? 'bg-blue-600 border-blue-400 hover:shadow-lg hover:shadow-blue-500/50'
-                            : table.type === 'vip'
-                            ? 'bg-purple-600 border-purple-400 hover:shadow-lg hover:shadow-purple-500/50'
-                            : 'bg-gradient-to-br from-yellow-500 to-orange-600 border-yellow-400 hover:shadow-lg hover:shadow-yellow-500/50'
-                        }`}>
-                          <span className={`text-xs ${table.type === 'premium' ? 'text-sm' : ''}`}>
-                            {table.id}
-                          </span>
-                        </div>
-                        
-                        {/* Booked Label */}
-                        {table.booked && (
-                          <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-2 py-0.5 rounded text-xs whitespace-nowrap">
-                            Booked
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                      {area.id}
+                    </button>
                   );
                 })}
               </div>
               
               {/* Legend */}
-              <div className="flex flex-wrap gap-4 mt-4 justify-center">
+              <div className="flex flex-wrap gap-3 mt-4 justify-center text-xs">
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-blue-600 border-2 border-blue-400"></div>
-                  <span className="text-sm text-gray-300">Standard ₱5K</span>
+                  <div className="w-5 h-5 rounded-full bg-[#140f2d] border-2 border-[#cccbd0]"></div>
+                  <span className="text-[#cccbd0]">CT ₱1.5K</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-purple-600 border-2 border-purple-400"></div>
-                  <span className="text-sm text-gray-300">VIP ₱10K</span>
+                  <div className="w-5 h-5 rounded-full bg-blue-500 border-2 border-blue-400"></div>
+                  <span className="text-[#cccbd0]">SC ₱2.5K</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-yellow-500 to-orange-600 border-2 border-yellow-400"></div>
-                  <span className="text-sm text-gray-300">Premium ₱15K</span>
+                  <div className="w-5 h-5 rounded-full bg-purple-500 border-2 border-purple-400"></div>
+                  <span className="text-[#cccbd0]">VIP ₱4.5K</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-gray-600 border-2 border-gray-500"></div>
-                  <span className="text-sm text-gray-300">Booked</span>
+                  <div className="w-5 h-5 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 border-2 border-purple-400"></div>
+                  <span className="text-[#cccbd0]">VVIP ₱6K</span>
                 </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full bg-[#cccbd0] border-2 border-white"></div>
+                  <span className="text-[#cccbd0]">Selected</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full bg-red-500 border-2 border-red-400"></div>
+                  <span className="text-[#cccbd0]">Booked</span>
+                </div>
+              </div>
+              
+              {/* Consumable Notice */}
+              <div className="mt-4 text-center">
+                <p className="text-[#cccbd0] text-sm bg-[#140f2d]/50 px-4 py-2 rounded-lg border border-[#cccbd0]/30">
+                  💡 All table fees are <span className="font-semibold text-white">consumable</span> - use towards food & drinks!
+                </p>
               </div>
             </div>
             
             {/* Selected Table Info */}
             {formData.tableNumber && (
-              <div className="bg-gradient-to-r from-pink-500/20 to-purple-600/20 border-2 border-pink-500 rounded-lg p-4 mb-4">
-                <p className="text-white font-bold mb-1">
-                  Selected: Table #{formData.tableNumber}
+              <div className="bg-gradient-to-r from-[#140f2d]/90 to-purple-600/20 border-2 border-[#cccbd0] rounded-lg p-4 mb-4">
+                <p className="text-white font-bold mb-2">
+                  Selected: Table {formData.tableNumber}
                 </p>
-                <p className="text-pink-400 text-lg font-bold">
-                  {tables.find(t => t.id === formData.tableType)?.name} - {tables.find(t => t.id === formData.tableType)?.price}
-                </p>
-                <p className="text-gray-300 text-sm">
-                  Capacity: {tables.find(t => t.id === formData.tableType)?.capacity}
-                </p>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[#cccbd0] text-lg font-bold">
+                      {tables.find(t => t.id === formData.tableType)?.name} - {tables.find(t => t.id === formData.tableType)?.price}
+                    </p>
+                    <p className="text-gray-300 text-sm">
+                      Capacity: {tables.find(t => t.id === formData.tableType)?.capacity}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-green-400 text-xs font-semibold">✓ CONSUMABLE</p>
+                    <p className="text-gray-400 text-xs">Use for F&B</p>
+                  </div>
+                </div>
               </div>
             )}
           </div>
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white py-4 rounded-lg font-bold text-lg transform hover:scale-105 transition-all duration-300 shadow-lg"
+            className="w-full bg-gradient-to-r from-[#cccbd0] to-white text-[#140f2d] hover:from-white hover:to-[#cccbd0] py-4 rounded-lg font-bold text-lg transform hover:scale-105 transition-all duration-300 shadow-lg"
           >
             Confirm Booking
           </button>

@@ -110,3 +110,12 @@ Forms use controlled components with `onChange={handleChange}`, basic `required`
 - `public/sitemap.xml` — add new routes as they're created
 - `public/robots.txt` — already configured to allow all crawlers
 - `index.html` — update title, description, and structured data when content changes
+
+### Documentation
+- Put all the docs file in `docs/` folder for easy reference
+
+
+### Colors
+- Primary color: #140f2d
+- Secondary color: #cccbd0 
+
