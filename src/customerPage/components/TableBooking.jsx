@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { X, Calendar, Clock, Users, DollarSign } from 'lucide-react';
-import MagneticButton from './MagneticButton';
 
 const TableBooking = ({ onClose }) => {
   const [formData, setFormData] = useState({
@@ -10,7 +9,8 @@ const TableBooking = ({ onClose }) => {
     date: '',
     time: '',
     guests: '',
-    tableType: 'standard'
+    tableType: 'standard',
+    tableNumber: null
   });
 
   const tables = [
@@ -19,13 +19,42 @@ const TableBooking = ({ onClose }) => {
     { id: 'premium', name: 'Premium VIP', price: '₱15,000', capacity: '8-10 people' }
   ];
 
+  // Club layout with tables
+  const clubTables = [
+    // Dance Floor Area (Standard Tables)
+    { id: 1, type: 'standard', x: 15, y: 60, booked: false },
+    { id: 2, type: 'standard', x: 85, y: 60, booked: false },
+    { id: 3, type: 'standard', x: 15, y: 80, booked: true },
+    { id: 4, type: 'standard', x: 85, y: 80, booked: false },
+    
+    // Side VIP Tables
+    { id: 5, type: 'vip', x: 10, y: 30, booked: false },
+    { id: 6, type: 'vip', x: 90, y: 30, booked: false },
+    { id: 7, type: 'vip', x: 10, y: 45, booked: true },
+    { id: 8, type: 'vip', x: 90, y: 45, booked: false },
+    
+    // Premium VIP Tables (Top area)
+    { id: 9, type: 'premium', x: 35, y: 15, booked: false },
+    { id: 10, type: 'premium', x: 65, y: 15, booked: false },
+  ];
+
+  const handleTableClick = (table) => {
+    if (!table.booked) {
+      setFormData({ ...formData, tableType: table.type, tableNumber: table.id });
+    }
+  };
+
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!formData.tableNumber) {
+      alert('Please select a table from the blueprint');
+      return;
+    }
     console.log('Booking submitted:', formData);
-    alert('Booking request submitted! We will contact you shortly.');
+    alert(`Booking request submitted for Table #${formData.tableNumber}! We will contact you shortly.`);
     onClose();
   };
 
@@ -139,49 +168,145 @@ const TableBooking = ({ onClose }) => {
             </div>
           </div>
 
-          {/* Table Type */}
+          {/* Table Selection Blueprint */}
           <div>
             <label className="block text-gray-300 mb-4 font-semibold flex items-center gap-2">
-              <DollarSign className="w-4 h-4" /> Select Table Type
+              <DollarSign className="w-4 h-4" /> Select Your Table
             </label>
-            <div className="grid md:grid-cols-3 gap-4">
-              {tables.map((table) => (
-                <label
-                  key={table.id}
-                  className={`cursor-pointer border-2 rounded-xl p-4 transition-all ${
-                    formData.tableType === table.id
-                      ? 'border-pink-500 bg-pink-500/10'
-                      : 'border-purple-500/30 hover:border-purple-500/60'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="tableType"
-                    value={table.id}
-                    checked={formData.tableType === table.id}
-                    onChange={handleChange}
-                    className="hidden"
-                  />
-                  <div className="text-center">
-                    <p className="text-white font-bold mb-1">{table.name}</p>
-                    <p className="text-pink-400 text-xl font-bold mb-1">{table.price}</p>
-                    <p className="text-gray-400 text-sm">{table.capacity}</p>
-                  </div>
-                </label>
-              ))}
+            
+            {/* Club Blueprint */}
+            <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 mb-4 border-2 border-purple-500/30">
+              <div className="relative w-full aspect-[4/3] bg-gray-900 rounded-lg border-2 border-dashed border-purple-500/50 overflow-hidden">
+                {/* DJ Booth */}
+                <div className="absolute top-2 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-4 py-2 rounded text-xs font-bold">
+                  DJ BOOTH
+                </div>
+                
+                {/* Dance Floor */}
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-32 border-4 border-pink-500/40 rounded-lg flex items-center justify-center">
+                  <span className="text-pink-400 font-bold text-sm">DANCE FLOOR</span>
+                </div>
+                
+                {/* Bar */}
+                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-amber-600 text-white px-6 py-2 rounded text-xs font-bold">
+                  BAR
+                </div>
+                
+                {/* Tables */}
+                {clubTables.map((table) => {
+                  const tableInfo = tables.find(t => t.id === table.type);
+                  const isSelected = formData.tableNumber === table.id;
+                  
+                  return (
+                    <div
+                      key={table.id}
+                      onClick={() => handleTableClick(table)}
+                      className={`absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-300 ${
+                        table.booked 
+                          ? 'opacity-40 cursor-not-allowed' 
+                          : 'hover:scale-110'
+                      }`}
+                      style={{ left: `${table.x}%`, top: `${table.y}%` }}
+                    >
+                      <div className={`relative ${
+                        table.type === 'standard' ? 'w-12 h-12' : 
+                        table.type === 'vip' ? 'w-14 h-14' : 
+                        'w-16 h-16'
+                      }`}>
+                        {/* Table Circle */}
+                        <div className={`w-full h-full rounded-full border-4 flex items-center justify-center font-bold text-white transition-all ${
+                          table.booked 
+                            ? 'bg-gray-600 border-gray-500' 
+                            : isSelected
+                            ? 'bg-pink-600 border-pink-400 shadow-lg shadow-pink-500/50'
+                            : table.type === 'standard'
+                            ? 'bg-blue-600 border-blue-400 hover:shadow-lg hover:shadow-blue-500/50'
+                            : table.type === 'vip'
+                            ? 'bg-purple-600 border-purple-400 hover:shadow-lg hover:shadow-purple-500/50'
+                            : 'bg-gradient-to-br from-yellow-500 to-orange-600 border-yellow-400 hover:shadow-lg hover:shadow-yellow-500/50'
+                        }`}>
+                          <span className={`text-xs ${table.type === 'premium' ? 'text-sm' : ''}`}>
+                            {table.id}
+                          </span>
+                        </div>
+                        
+                        {/* Booked Label */}
+                        {table.booked && (
+                          <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-2 py-0.5 rounded text-xs whitespace-nowrap">
+                            Booked
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              
+              {/* Legend */}
+              <div className="flex flex-wrap gap-4 mt-4 justify-center">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-blue-600 border-2 border-blue-400"></div>
+                  <span className="text-sm text-gray-300">Standard ₱5K</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-purple-600 border-2 border-purple-400"></div>
+                  <span className="text-sm text-gray-300">VIP ₱10K</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-yellow-500 to-orange-600 border-2 border-yellow-400"></div>
+                  <span className="text-sm text-gray-300">Premium ₱15K</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-gray-600 border-2 border-gray-500"></div>
+                  <span className="text-sm text-gray-300">Booked</span>
+                </div>
+              </div>
             </div>
+            
+            {/* Selected Table Info */}
+            {formData.tableNumber && (
+              <div className="bg-gradient-to-r from-pink-500/20 to-purple-600/20 border-2 border-pink-500 rounded-lg p-4 mb-4">
+                <p className="text-white font-bold mb-1">
+                  Selected: Table #{formData.tableNumber}
+                </p>
+                <p className="text-pink-400 text-lg font-bold">
+                  {tables.find(t => t.id === formData.tableType)?.name} - {tables.find(t => t.id === formData.tableType)?.price}
+                </p>
+                <p className="text-gray-300 text-sm">
+                  Capacity: {tables.find(t => t.id === formData.tableType)?.capacity}
+                </p>
+              </div>
+            )}
           </div>
 
-          <MagneticButton
+          <button
             type="submit"
             className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white py-4 rounded-lg font-bold text-lg transform hover:scale-105 transition-all duration-300 shadow-lg"
           >
             Confirm Booking
-          </MagneticButton>
+          </button>
         </form>
       </div>
     </div>
   );
 };
 
-export default TableBooking;
+// Demo wrapper to show the component
+export default function App() {
+  const [showBooking, setShowBooking] = useState(true);
+  
+  return (
+    <div className="min-h-screen bg-black flex items-center justify-center">
+      {showBooking ? (
+        <TableBooking onClose={() => setShowBooking(false)} />
+      ) : (
+        <button
+          onClick={() => setShowBooking(true)}
+          className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:scale-105 transition-all"
+        >
+          Open Table Booking
+        </button>
+      )}
+    </div>
+  );
+}
