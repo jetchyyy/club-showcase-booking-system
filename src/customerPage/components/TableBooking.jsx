@@ -37,9 +37,19 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
   }, [formData.date]);
 
   const fetchBookedTables = async (date) => {
-    const result = await bookingService.getBookedTables(date);
-    if (result.success) {
-      setBookedTables(result.data || []);
+    try {
+      const result = await bookingService.getBookedTables(date);
+      if (result.success) {
+        setBookedTables(result.data || []);
+      } else {
+        console.warn('Could not fetch booked tables:', result.error);
+        // Continue with empty array to allow table selection
+        setBookedTables([]);
+      }
+    } catch (error) {
+      console.error('Error fetching booked tables:', error);
+      // Continue with empty array to allow table selection
+      setBookedTables([]);
     }
   };
 
@@ -253,8 +263,11 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
             </label>
             
             {!formData.date && (
-              <div className="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-3 mb-4">
-                <p className="text-yellow-200 text-sm">Please select a date first to view available tables</p>
+              <div className="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-4 mb-4 animate-pulse">
+                <p className="text-yellow-200 text-sm font-semibold flex items-center gap-2">
+                  <Calendar className="w-4 h-4" />
+                  ⚠️ Please select a date first to view and select available tables
+                </p>
               </div>
             )}
 
@@ -272,17 +285,22 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
                   const isSelected = formData.tableNumber === area.id;
                   const booked = isTableBooked(area.id);
                   const bookingStatus = getTableBookingStatus(area.id);
+                  const isDisabled = booked || !formData.date;
                   
                   return (
                     <button
                       key={area.id}
                       type="button"
                       onClick={() => handleAreaClick(area)}
-                      className={`absolute w-10 h-10 text-xs font-bold text-white rounded-full border-2 flex items-center justify-center transition-all duration-300 hover:scale-110 ${
+                      className={`absolute w-10 h-10 text-xs font-bold text-white rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+                        isDisabled ? '' : 'hover:scale-110 cursor-pointer'
+                      } ${
                         booked 
                           ? bookingStatus === 'confirmed'
                             ? 'bg-red-600 border-red-500 cursor-not-allowed opacity-70'
                             : 'bg-orange-500 border-orange-400 cursor-not-allowed opacity-70'
+                          : !formData.date
+                          ? 'bg-gray-600 border-gray-500 cursor-not-allowed opacity-50'
                           : isSelected
                           ? 'bg-[#cccbd0] border-white text-[#140f2d] shadow-lg shadow-[#cccbd0]/50'
                           : area.type === 'vip'
@@ -297,9 +315,16 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
                         top: area.top,
                         left: area.left,
                         transform: "translate(-50%, -50%)",
+                        pointerEvents: isDisabled ? 'none' : 'auto',
                       }}
-                      disabled={booked || !formData.date}
-                      title={booked ? `Booked (${bookingStatus})` : area.id}
+                      disabled={isDisabled}
+                      title={
+                        !formData.date 
+                          ? 'Please select a date first' 
+                          : booked 
+                          ? `Booked (${bookingStatus})` 
+                          : area.id
+                      }
                     >
                       {area.id}
                     </button>
