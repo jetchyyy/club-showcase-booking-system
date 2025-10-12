@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { X, Calendar, Clock, Users, DollarSign } from 'lucide-react';
+import { X, Calendar, Users, DollarSign, Loader2 } from 'lucide-react';
 import floorPlanImage from '../../assets/AGWATable.png';
+import { bookingService } from '../../services/bookingService';
+import { validateBookingData } from '../../utils/validation';
 
 const TableBooking = ({ onClose, prefilledDate = '' }) => {
   const [formData, setFormData] = useState({
@@ -8,11 +10,14 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
     email: '',
     phone: '',
     date: '',
-    time: '',
     guests: '',
     tableType: 'standard',
     tableNumber: null
   });
+
+  const [bookedTables, setBookedTables] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
 
   // Update date when prefilledDate prop changes
   useEffect(() => {
@@ -24,6 +29,20 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
     }
   }, [prefilledDate]);
 
+  // Fetch booked tables when date changes
+  useEffect(() => {
+    if (formData.date) {
+      fetchBookedTables(formData.date);
+    }
+  }, [formData.date]);
+
+  const fetchBookedTables = async (date) => {
+    const result = await bookingService.getBookedTables(date);
+    if (result.success) {
+      setBookedTables(result.data || []);
+    }
+  };
+
   const tables = [
     { id: 'ct', name: 'Cocktail Table', price: '₱1,500', capacity: '2-4 people' },
     { id: 'sc', name: 'Standard Circle', price: '₱2,500', capacity: '4-6 people' },
@@ -31,61 +50,113 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
     { id: 'vvip', name: 'VVIP Table', price: '₱6,000', capacity: '8-10 people' }
   ];
 
-  // Define coordinates and labels (based on actual floor plan)
   const areas = [
-    // LEFT SIDE VIP BOOTHS (VIP1-VIP5)
-    { id: "VIP1", top: "12%", left: "26%", type: "vip", booked: false },
-    { id: "VVIP2", top: "12%", left: "8%", type: "vvip", booked: false },
-    { id: "VIP2", top: "25%", left: "26%", type: "vip", booked: false },
-    { id: "VIP3", top: "42%", left: "26%", type: "vip", booked: true },
-    { id: "VIP4", top: "59%", left: "26%", type: "vip", booked: false },
-    { id: "VVIP1", top: "60%", left: "7%", type: "vvip", booked: false },
-    
-    // RIGHT SIDE ELEMENTS
-    { id: "VIP9", top: "12%", left: "75%", type: "vvip", booked: false },
-    { id: "VIP10", top: "43%", left: "92%", type: "vip", booked: true },
-    { id: "SC1", top: "25%", left: "72%", type: "sc", booked: false },
-    { id: "SC2", top: "25%", left: "83%", type: "sc", booked: false },
-    { id: "SC3", top: "43%", left: "83%", type: "sc", booked: false },
-    { id: "SC4", top: "43%", left: "72%", type: "sc", booked: true },
-    { id: "VVIP3", top: "12%", left: "92%", type: "vvip", booked: true },
-
-    // BOTTOM CENTER (VIPS + SC)
-    { id: "VIPS1", top: "85%", left: "35%", type: "vvip", booked: false },
-    { id: "VIPS2", top: "92%", left: "50%", type: "vvip", booked: false },
-    { id: "VIPS3", top: "85%", left: "65%", type: "vvip", booked: false },
-    { id: "SC5", top: "78%", left: "50%", type: "sc", booked: false },
-    { id: "SC6", top: "73%", left: "26%", type: "sc", booked: false },
+    { id: "VIP1", top: "12%", left: "26%", type: "vip" },
+    { id: "VVIP2", top: "12%", left: "8%", type: "vvip" },
+    { id: "VIP2", top: "25%", left: "26%", type: "vip" },
+    { id: "VIP3", top: "42%", left: "26%", type: "vip" },
+    { id: "VIP4", top: "59%", left: "26%", type: "vip" },
+    { id: "VVIP1", top: "60%", left: "7%", type: "vvip" },
+    { id: "VIP9", top: "12%", left: "75%", type: "vvip" },
+    { id: "VIP10", top: "43%", left: "92%", type: "vip" },
+    { id: "SC1", top: "25%", left: "72%", type: "sc" },
+    { id: "SC2", top: "25%", left: "83%", type: "sc" },
+    { id: "SC3", top: "43%", left: "83%", type: "sc" },
+    { id: "SC4", top: "43%", left: "72%", type: "sc" },
+    { id: "VVIP3", top: "12%", left: "92%", type: "vvip" },
+    { id: "VIPS1", top: "85%", left: "35%", type: "vvip" },
+    { id: "VIPS2", top: "92%", left: "50%", type: "vvip" },
+    { id: "VIPS3", top: "85%", left: "65%", type: "vvip" },
+    { id: "SC5", top: "78%", left: "50%", type: "sc" },
+    { id: "SC6", top: "73%", left: "26%", type: "sc" },
   ];
 
+  // Check if table is booked for selected date (only confirmed/pending bookings block the table)
+  const isTableBooked = (tableId) => {
+    if (!formData.date) return false;
+    return bookedTables.some(
+      booking => 
+        booking.table_number === tableId &&
+        (booking.status === 'confirmed' || booking.status === 'pending')
+    );
+  };
+
+  // Check booking status for a specific table
+  const getTableBookingStatus = (tableId) => {
+    if (!formData.date) return null;
+    const booking = bookedTables.find(
+      b => b.table_number === tableId
+    );
+    return booking?.status || null;
+  };
+
   const handleAreaClick = (area) => {
-    if (!area.booked) {
+    const booked = isTableBooked(area.id);
+    if (!booked) {
       setFormData({ ...formData, tableType: area.type, tableNumber: area.id });
+      setErrors({ ...errors, tableNumber: null });
     }
   };
 
-  const handleChange = (e) =>
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // Clear error for this field
+    setErrors({ ...errors, [e.target.name]: null });
+  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.tableNumber) {
-      alert('Please select a table from the blueprint');
+    
+    // Validate form data
+    const validation = validateBookingData(formData);
+    if (!validation.isValid) {
+      setErrors(validation.errors);
       return;
     }
-    console.log('Booking submitted:', formData);
-    alert(`Booking request submitted for Table #${formData.tableNumber}! We will contact you shortly.`);
-    onClose();
+
+    setIsSubmitting(true);
+
+    try {
+      // Check availability one more time before submitting
+      const availability = await bookingService.checkTableAvailability(
+        formData.tableNumber,
+        formData.date
+      );
+
+      if (!availability.available) {
+        alert('Sorry, this table has just been booked by another user for this date. Please select a different table.');
+        fetchBookedTables(formData.date);
+        setFormData(prev => ({ ...prev, tableNumber: null }));
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Create booking
+      const result = await bookingService.createBooking(formData);
+
+      if (result.success) {
+        alert(`Booking request submitted successfully for Table #${formData.tableNumber}! We will contact you shortly at ${formData.email}.`);
+        onClose();
+      } else {
+        alert(`Booking failed: ${result.error}`);
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-gradient-to-br from-[#140f2d] to-black border border-[#cccbd0]/30 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-gradient-to-r from-[#140f2d] to-purple-900 p-6 flex justify-between items-center rounded-t-3xl">
+        <div className="sticky top-0 bg-gradient-to-r from-[#140f2d] to-purple-900 p-6 flex justify-between items-center rounded-t-3xl z-10">
           <h2 className="text-3xl font-bold text-white">Book Your Table</h2>
           <button
             onClick={onClose}
             className="text-white hover:text-[#cccbd0] transition-colors"
+            disabled={isSubmitting}
           >
             <X className="w-8 h-8" />
           </button>
@@ -102,9 +173,10 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full bg-gray-800/50 border border-[#cccbd0]/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#cccbd0] transition-colors"
+                className={`w-full bg-gray-800/50 border ${errors.name ? 'border-red-500' : 'border-[#cccbd0]/30'} rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#cccbd0] transition-colors`}
                 placeholder="Juan Dela Cruz"
               />
+              {errors.name && <p className="text-red-400 text-sm mt-1">{errors.name}</p>}
             </div>
 
             <div>
@@ -115,9 +187,10 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full bg-gray-800/50 border border-[#cccbd0]/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#cccbd0] transition-colors"
+                className={`w-full bg-gray-800/50 border ${errors.email ? 'border-red-500' : 'border-[#cccbd0]/30'} rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#cccbd0] transition-colors`}
                 placeholder="juan@example.com"
               />
+              {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
             </div>
           </div>
 
@@ -130,13 +203,14 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
               value={formData.phone}
               onChange={handleChange}
               required
-              className="w-full bg-gray-800/50 border border-[#cccbd0]/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#cccbd0] transition-colors"
+              className={`w-full bg-gray-800/50 border ${errors.phone ? 'border-red-500' : 'border-[#cccbd0]/30'} rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#cccbd0] transition-colors`}
               placeholder="+63 912 345 6789"
             />
+            {errors.phone && <p className="text-red-400 text-sm mt-1">{errors.phone}</p>}
           </div>
 
-          {/* Date / Time / Guests */}
-          <div className="grid md:grid-cols-3 gap-4">
+          {/* Date and Guests */}
+          <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-gray-300 mb-2 font-semibold flex items-center gap-2">
                 <Calendar className="w-4 h-4" /> Date
@@ -147,27 +221,10 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
                 value={formData.date}
                 onChange={handleChange}
                 required
-                className="w-full bg-gray-800/50 border border-[#cccbd0]/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#cccbd0] transition-colors"
+                min={new Date().toISOString().split('T')[0]}
+                className={`w-full bg-gray-800/50 border ${errors.date ? 'border-red-500' : 'border-[#cccbd0]/30'} rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#cccbd0] transition-colors`}
               />
-            </div>
-
-            <div>
-              <label className="block text-gray-300 mb-2 font-semibold flex items-center gap-2">
-                <Clock className="w-4 h-4" /> Time
-              </label>
-              <select
-                name="time"
-                value={formData.time}
-                onChange={handleChange}
-                required
-                className="w-full bg-gray-800/50 border border-[#cccbd0]/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#cccbd0] transition-colors"
-              >
-                <option value="">Select</option>
-                <option value="22:00">10:00 PM</option>
-                <option value="23:00">11:00 PM</option>
-                <option value="00:00">12:00 AM</option>
-                <option value="01:00">1:00 AM</option>
-              </select>
+              {errors.date && <p className="text-red-400 text-sm mt-1">{errors.date}</p>}
             </div>
 
             <div>
@@ -182,9 +239,10 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
                 required
                 min="1"
                 max="20"
-                className="w-full bg-gray-800/50 border border-[#cccbd0]/30 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#cccbd0] transition-colors"
+                className={`w-full bg-gray-800/50 border ${errors.guests ? 'border-red-500' : 'border-[#cccbd0]/30'} rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#cccbd0] transition-colors`}
                 placeholder="4"
               />
+              {errors.guests && <p className="text-red-400 text-sm mt-1">{errors.guests}</p>}
             </div>
           </div>
 
@@ -194,33 +252,37 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
               <DollarSign className="w-4 h-4" /> Select Your Table
             </label>
             
+            {!formData.date && (
+              <div className="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-3 mb-4">
+                <p className="text-yellow-200 text-sm">Please select a date first to view available tables</p>
+              </div>
+            )}
+
             {/* Club Floor Map */}
             <div className="bg-gradient-to-br from-[#140f2d] to-gray-900 rounded-xl p-6 mb-4 border-2 border-[#cccbd0]/30">
               <div className="relative w-full max-w-4xl mx-auto">
-                {/* Background Image */}
                 <img
                   src={floorPlanImage}
                   alt="Club Floor Map"
                   className="w-full rounded-lg shadow-lg opacity-90"
-                  onError={(e) => {
-                    // Fallback to gradient background if image fails to load
-                    e.target.style.display = 'none';
-                    e.target.parentElement.style.background = 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)';
-                    e.target.parentElement.style.minHeight = '400px';
-                  }}
                 />
 
                 {/* Hotspots */}
                 {areas.map((area) => {
                   const isSelected = formData.tableNumber === area.id;
+                  const booked = isTableBooked(area.id);
+                  const bookingStatus = getTableBookingStatus(area.id);
                   
                   return (
                     <button
                       key={area.id}
+                      type="button"
                       onClick={() => handleAreaClick(area)}
                       className={`absolute w-10 h-10 text-xs font-bold text-white rounded-full border-2 flex items-center justify-center transition-all duration-300 hover:scale-110 ${
-                        area.booked 
-                          ? 'bg-red-500 border-red-400 cursor-not-allowed opacity-60'
+                        booked 
+                          ? bookingStatus === 'confirmed'
+                            ? 'bg-red-600 border-red-500 cursor-not-allowed opacity-70'
+                            : 'bg-orange-500 border-orange-400 cursor-not-allowed opacity-70'
                           : isSelected
                           ? 'bg-[#cccbd0] border-white text-[#140f2d] shadow-lg shadow-[#cccbd0]/50'
                           : area.type === 'vip'
@@ -236,7 +298,8 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
                         left: area.left,
                         transform: "translate(-50%, -50%)",
                       }}
-                      disabled={area.booked}
+                      disabled={booked || !formData.date}
+                      title={booked ? `Booked (${bookingStatus})` : area.id}
                     >
                       {area.id}
                     </button>
@@ -267,8 +330,12 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
                   <span className="text-[#cccbd0]">Selected</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-red-500 border-2 border-red-400"></div>
-                  <span className="text-[#cccbd0]">Booked</span>
+                  <div className="w-5 h-5 rounded-full bg-orange-500 border-2 border-orange-400"></div>
+                  <span className="text-[#cccbd0]">Pending</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full bg-red-600 border-2 border-red-500"></div>
+                  <span className="text-[#cccbd0]">Confirmed</span>
                 </div>
               </div>
               
@@ -279,6 +346,10 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
                 </p>
               </div>
             </div>
+            
+            {errors.tableNumber && (
+              <p className="text-red-400 text-sm mb-2">{errors.tableNumber}</p>
+            )}
             
             {/* Selected Table Info */}
             {formData.tableNumber && (
@@ -306,9 +377,17 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-[#cccbd0] to-white text-[#140f2d] hover:from-white hover:to-[#cccbd0] py-4 rounded-lg font-bold text-lg transform hover:scale-105 transition-all duration-300 shadow-lg"
+            disabled={isSubmitting}
+            className="w-full bg-gradient-to-r from-[#cccbd0] to-white text-[#140f2d] hover:from-white hover:to-[#cccbd0] py-4 rounded-lg font-bold text-lg transform hover:scale-105 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
           >
-            Confirm Booking
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              'Confirm Booking'
+            )}
           </button>
         </form>
       </div>
@@ -316,22 +395,4 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
   );
 };
 
-// Demo wrapper to show the component
-export default function App() {
-  const [showBooking, setShowBooking] = useState(true);
-  
-  return (
-    <div className="min-h-screen bg-black flex items-center justify-center">
-      {showBooking ? (
-        <TableBooking onClose={() => setShowBooking(false)} />
-      ) : (
-        <button
-          onClick={() => setShowBooking(true)}
-          className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:scale-105 transition-all"
-        >
-          Open Table Booking
-        </button>
-      )}
-    </div>
-  );
-}
+export default TableBooking;
