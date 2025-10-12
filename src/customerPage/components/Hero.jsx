@@ -68,12 +68,12 @@ const Hero = ({ onBookNow }) => {
       <div 
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: "url('src/assets/AGWA2.jpg')",
+          backgroundImage: "url('/images/AGWA2.jpg')",
           transform: `translateY(${scrollY * 0.5}px)` // Parallax effect
         }}
       />
-      {/* Dark overlay for text readability */}
-      <div className="absolute inset-0 bg-black/70" />
+      {/* Dark overlay - fades to dark purple at bottom to blend with Events */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/70 to-[#1a0f2e]" />
       
       <FloatingParticles />
 

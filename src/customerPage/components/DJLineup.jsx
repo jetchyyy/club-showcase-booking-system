@@ -9,7 +9,7 @@ const DJLineup = () => {
       id: 1,
       name: "DJ Yoxi",
       genre: "Techno",
-      image: "src/assets/AGWADJ4.jpg",
+  image: "/images/AGWADJ4.jpg",
       description: "Master of dark techno beats with 10+ years of underground experience",
       specialty: "Progressive Techno",
       nationality: "German",
@@ -23,7 +23,7 @@ const DJLineup = () => {
       id: 2,
       name: "DJ Lux",
       genre: "EDM & House",
-      image: "src/assets/AGWADJ.jpg", 
+  image: "/images/AGWADJ.jpg", 
       description: "International sensation bringing euphoric drops and infectious energy",
       specialty: "Future House",
       nationality: "Dutch",
@@ -37,7 +37,7 @@ const DJLineup = () => {
       id: 3,
       name: "DJ Novi",
       genre: "Techno & EDM",
-      image: "src/assets/AGWADJ3.jpg",
+  image: "/images/AGWADJ3.jpg",
       description: "Rising star mixing cutting-edge techno with melodic EDM elements",
       specialty: "Melodic Techno",
       nationality: "Swedish",
@@ -51,7 +51,7 @@ const DJLineup = () => {
       id: 4,
       name: "DJ Zara",
       genre: "Deep House",
-      image: "src/assets/AGWADJ2.jpg",
+  image: "/images/AGWADJ2.jpg",
       description: "Ethereal deep house vibes with mesmerizing atmospheric soundscapes",
       specialty: "Ambient House",
       nationality: "French",
@@ -132,9 +132,9 @@ const DJLineup = () => {
         }
       `}</style>
       
-      <section className="py-20 px-4 bg-[#0a0a12] relative overflow-hidden" aria-labelledby="dj-lineup-heading">
+      <section className="py-24 px-4 bg-gradient-to-b from-[#1a0f2e] to-[#0a0a12] relative" aria-labelledby="dj-lineup-heading">
         {/* Background Effects */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/8 via-transparent to-pink-900/8"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/8 via-transparent to-pink-900/8 pointer-events-none"></div>
         <div className="absolute top-10 left-1/4 w-64 h-64 bg-purple-500/8 rounded-full blur-3xl"></div>
         <div className="absolute bottom-10 right-1/4 w-80 h-80 bg-pink-500/8 rounded-full blur-3xl"></div>
         

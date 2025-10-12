@@ -10,7 +10,7 @@ const Gallery = () => {
       id: 1, 
       type: 'hero', 
       size: 'large', 
-      image: 'src/assets/AGWA1.jpg',
+  image: '/images/AGWA1.jpg',
       label: 'Main Dance Floor', 
       subtitle: 'Where the magic happens',
       icon: Music,
@@ -23,7 +23,7 @@ const Gallery = () => {
       id: 2, 
       type: 'vip', 
       size: 'medium', 
-      image: 'src/assets/AGWA9.jpg',
+  image: '/images/AGWA9.jpg',
       label: 'VIP Lounge', 
       subtitle: 'Exclusive experience',
       icon: Sparkles,
@@ -36,7 +36,7 @@ const Gallery = () => {
       id: 3, 
       type: 'dj', 
       size: 'small', 
-      image: 'src/assets/AGWA6.jpg',
+  image: '/images/AGWA6.jpg',
       label: 'DJ Booth', 
       subtitle: 'Professional setup',
       icon: Volume2,
@@ -47,7 +47,7 @@ const Gallery = () => {
       id: 4, 
       type: 'events', 
       size: 'small', 
-      image: 'src/assets/AGWA11.jpg',
+  image: '/images/AGWA11.jpg',
       label: 'Events and themes', 
       subtitle: 'Themed nights & special events',
       icon: HatGlasses,
@@ -60,7 +60,7 @@ const Gallery = () => {
       id: 5, 
       type: 'crowd', 
       size: 'wide', 
-      image: 'src/assets/AGWA8.jpg',
+  image: '/images/AGWA8.jpg',
       label: 'Crowd', 
       subtitle: 'Exciting atmosphere',
       icon: Camera,
@@ -73,7 +73,7 @@ const Gallery = () => {
       id: 6, 
       type: 'backdrop', 
       size: 'wide', 
-      image: 'src/assets/AGWA10.jpg',
+  image: '/images/AGWA10.jpg',
       label: 'Backdrop', 
       subtitle: 'Iconic AGWA Backdrop',
       icon: Play,
@@ -83,9 +83,9 @@ const Gallery = () => {
   ];
 
   return (
-    <section className="py-20 px-4 bg-[#0a0a12] relative overflow-hidden" aria-labelledby="gallery-heading">
+    <section className="py-24 px-4 bg-gradient-to-b from-[#0a0a12] to-[#1a0f2e] relative" aria-labelledby="gallery-heading">
       {/* Background effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/5 via-transparent to-pink-900/5"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/5 via-transparent to-pink-900/5 pointer-events-none"></div>
       <div className="absolute top-20 left-10 w-32 h-32 bg-purple-500/8 rounded-full blur-3xl"></div>
       <div className="absolute bottom-20 right-10 w-40 h-40 bg-pink-500/8 rounded-full blur-3xl"></div>
       

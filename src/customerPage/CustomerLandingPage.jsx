@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import Features from './components/Events';
 import Gallery from './components/Gallery';
 import DJLineup from './components/DJLineup';
+import Testimonials from './components/Testimonials';
 import Footer from './components/Footer';
 import TableBooking from './components/TableBooking';
 
@@ -26,6 +27,7 @@ const CustomerLandingPage = () => {
         <Features onBookNow={handleBookNow} />
         <Gallery />
         <DJLineup />
+        <Testimonials />
       </main>
       <Footer />
       {showBooking && (

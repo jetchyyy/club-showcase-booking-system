@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, Calendar, Users, DollarSign, Loader2 } from 'lucide-react';
-import floorPlanImage from '../../assets/AGWATable.png';
+const floorPlanImage = '/images/AGWATable.png';
 import { bookingService } from '../../services/bookingService';
 import { validateBookingData } from '../../utils/validation';
 

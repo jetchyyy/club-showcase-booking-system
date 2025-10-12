@@ -10,7 +10,7 @@ const Events = ({ onBookNow }) => {
       dj: "DJ BUTTERFLY & DJ OEBUS-ISUB",
       date: "TUESDAY 30 MAR 2021",
       bookingDate: "2024-12-30", // ISO format for date input
-      image: "src/assets/AGWA3.jpg",
+  image: "/images/AGWA3.jpg",
       featured: true
     },
     {
@@ -20,7 +20,7 @@ const Events = ({ onBookNow }) => {
       dj: "DJ MEEK & DJ AIJAL",
       date: "WEDNESDAY 31 MAR 2021",
       bookingDate: "2024-12-31", // ISO format for date input
-      image: "src/assets/AGWA4.jpg",
+  image: "/images/AGWA4.jpg",
       featured: false
     },
     {
@@ -30,7 +30,7 @@ const Events = ({ onBookNow }) => {
       dj: "DJ RHOMA & DJ DADANG",
       date: "THURSDAY 1 APRIL 2021",
       bookingDate: "2025-04-01", // ISO format for date input
-      image: "src/assets/AGWA5.jpg",
+  image: "/images/AGWA5.jpg",
       featured: false
     }
   ];
@@ -106,11 +106,10 @@ const Events = ({ onBookNow }) => {
         }
       `}</style>
       
-    <section className="py-20 px-4 bg-[#0a0a12] relative overflow-hidden" aria-labelledby="events-heading">
+    <section className="py-24 px-4 bg-gradient-to-b from-[#1a0f2e] via-[#0a0a12] to-[#0a0a12] relative" aria-labelledby="events-heading">
       {/* Ambient background glow effects */}
       <div className="absolute top-20 left-10 w-96 h-96 bg-pink-500/8 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/8 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/5 to-transparent pointer-events-none" />
       
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-6">

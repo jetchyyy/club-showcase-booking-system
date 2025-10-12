@@ -2,7 +2,7 @@ import { MapPin, Phone, Mail, Facebook, Instagram } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-[#0a0a12] border-t border-purple-500/10 py-12 px-4 relative overflow-hidden">
+    <footer className="bg-gradient-to-b from-[#1a0f2e] to-[#0a0a12] border-t border-purple-500/5 py-16 px-4 relative">
       {/* Ambient glow effects */}
       <div className="absolute top-0 left-1/4 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-pink-500/5 rounded-full blur-3xl pointer-events-none" />
@@ -21,18 +21,29 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold text-white mb-4">Contact Us</h4>
             <div className="space-y-3">
-              <div className="flex items-start gap-3 text-gray-400">
-                <MapPin className="w-5 h-5 text-pink-400 flex-shrink-0 mt-1" />
-                <span>IT Park, Lahug, Cebu City, Philippines</span>
-              </div>
-              <div className="flex items-center gap-3 text-gray-400">
-                <Phone className="w-5 h-5 text-pink-400" />
-                <span>+63 912 345 6789</span>
-              </div>
-              <div className="flex items-center gap-3 text-gray-400">
-                <Mail className="w-5 h-5 text-pink-400" />
-                <span>info@pulsecebu.com</span>
-              </div>
+              <a 
+                href="https://maps.google.com/?q=IT+Park+Lahug+Cebu+City+Philippines"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-3 text-gray-400 hover:text-pink-400 transition-colors duration-300 group"
+              >
+                <MapPin className="w-5 h-5 text-pink-400 flex-shrink-0 mt-1 group-hover:scale-110 transition-transform" />
+                <span className="group-hover:underline">IT Park, Lahug, Cebu City, Philippines</span>
+              </a>
+              <a 
+                href="tel:+639123456789"
+                className="flex items-center gap-3 text-gray-400 hover:text-pink-400 transition-colors duration-300 group"
+              >
+                <Phone className="w-5 h-5 text-pink-400 group-hover:scale-110 transition-transform" />
+                <span className="group-hover:underline">+63 912 345 6789</span>
+              </a>
+              <a 
+                href="mailto:info@pulsecebu.com"
+                className="flex items-center gap-3 text-gray-400 hover:text-pink-400 transition-colors duration-300 group"
+              >
+                <Mail className="w-5 h-5 text-pink-400 group-hover:scale-110 transition-transform" />
+                <span className="group-hover:underline">info@pulsecebu.com</span>
+              </a>
             </div>
           </div>
 
@@ -53,14 +64,20 @@ const Footer = () => {
           </p>
           <div className="flex gap-4">
             <a
-              href="#"
-              className="w-10 h-10 bg-purple-900/50 rounded-full flex items-center justify-center text-pink-400 hover:bg-pink-500 hover:text-white transition-all duration-300"
+              href="https://facebook.com/yourclub"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow us on Facebook"
+              className="w-10 h-10 bg-purple-900/50 rounded-full flex items-center justify-center text-pink-400 hover:bg-pink-500 hover:text-white transition-all duration-300 hover:scale-110"
             >
               <Facebook className="w-5 h-5" />
             </a>
             <a
-              href="#"
-              className="w-10 h-10 bg-purple-900/50 rounded-full flex items-center justify-center text-pink-400 hover:bg-pink-500 hover:text-white transition-all duration-300"
+              href="https://instagram.com/yourclub"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow us on Instagram"
+              className="w-10 h-10 bg-purple-900/50 rounded-full flex items-center justify-center text-pink-400 hover:bg-pink-500 hover:text-white transition-all duration-300 hover:scale-110"
             >
               <Instagram className="w-5 h-5" />
             </a>
