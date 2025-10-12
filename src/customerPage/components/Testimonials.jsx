@@ -105,8 +105,11 @@ const Testimonials = () => {
           animation: shimmer 3s infinite;
         }
       `}</style>
-
-    <section className="py-24 px-4 bg-gradient-to-b from-[#0a0a12] to-[#1a0f2e] relative" aria-labelledby="testimonials-heading">
+    <section 
+      id="reviews"
+      className="py-24 px-4 bg-gradient-to-b from-[#0a0a12] to-[#1a0f2e] relative overflow-hidden" 
+      aria-labelledby="testimonials-heading"
+    >
       {/* Background Effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-pink-900/5 via-transparent to-purple-900/5 pointer-events-none"></div>
       <div className="absolute top-10 right-1/4 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl"></div>

@@ -2,7 +2,10 @@ import { MapPin, Phone, Mail, Facebook, Instagram } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-gradient-to-b from-[#1a0f2e] to-[#0a0a12] border-t border-purple-500/5 py-16 px-4 relative">
+    <footer 
+      id="contact"
+      className="bg-gradient-to-b from-[#1a0f2e] to-[#0a0a12] border-t border-purple-500/5 py-16 px-4 relative"
+    >
       {/* Ambient glow effects */}
       <div className="absolute top-0 left-1/4 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-pink-500/5 rounded-full blur-3xl pointer-events-none" />

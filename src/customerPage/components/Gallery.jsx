@@ -81,9 +81,12 @@ const Gallery = () => {
       gridClass: 'col-span-1 row-span-1'
     }
   ];
-
   return (
-    <section className="py-24 px-4 bg-gradient-to-b from-[#0a0a12] to-[#1a0f2e] relative" aria-labelledby="gallery-heading">
+    <section 
+      id="gallery"
+      className="py-24 px-4 bg-gradient-to-b from-[#0a0a12] to-[#1a0f2e] relative" 
+      aria-labelledby="gallery-heading"
+    >
       {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/5 via-transparent to-pink-900/5 pointer-events-none"></div>
       <div className="absolute top-20 left-10 w-32 h-32 bg-purple-500/8 rounded-full blur-3xl"></div>

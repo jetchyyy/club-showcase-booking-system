@@ -63,7 +63,10 @@ const Hero = ({ onBookNow }) => {
 
       {/* TypedDescription component defined below */}
       
-    <header className="relative h-screen overflow-hidden">
+    <header 
+      id="home"
+      className="relative h-screen overflow-hidden"
+    >
       {/* Real nightclub photo background */}
       <div 
         className="absolute inset-0 bg-cover bg-center"

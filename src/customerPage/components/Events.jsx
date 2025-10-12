@@ -106,7 +106,11 @@ const Events = ({ onBookNow }) => {
         }
       `}</style>
       
-    <section className="py-24 px-4 bg-gradient-to-b from-[#1a0f2e] via-[#0a0a12] to-[#0a0a12] relative" aria-labelledby="events-heading">
+    <section 
+      id="events"
+      className="py-24 px-4 bg-gradient-to-b from-[#1a0f2e] via-[#0a0a12] to-[#0a0a12] relative" 
+      aria-labelledby="events-heading"
+    >
       {/* Ambient background glow effects */}
       <div className="absolute top-20 left-10 w-96 h-96 bg-pink-500/8 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/8 rounded-full blur-[120px] pointer-events-none" />
