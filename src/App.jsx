@@ -1,7 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import CustomerLandingPage from './customerPage/CustomerLandingPage';
 import AdminLogin from './AdminLogin';
 import AdminDashboard from './AdminDashboard';
+import Bookings from './Bookings';
+import AdminEvents from './AdminEvents';
 
 function App() {
   return (
@@ -13,8 +15,17 @@ function App() {
         {/* Admin Login Route */}
         <Route path="/admin" element={<AdminLogin />} />
         
-        {/* Admin Dashboard Route (Protected) */}
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        {/* Admin Dashboard with nested routes */}
+        <Route path="/admin/dashboard" element={<AdminDashboard />}>
+          {/* Default redirect to bookings */}
+          <Route index element={<Navigate to="/admin/dashboard/bookings" replace />} />
+          
+          {/* Bookings Route */}
+          <Route path="bookings" element={<Bookings />} />
+          <Route path="events" element={<AdminEvents />} />
+          {/* Events Route - Uncomment when Events.jsx is created */}
+          {/* <Route path="events" element={<Events />} /> */}
+        </Route>
         
         {/* 404 Not Found Route */}
         <Route path="*" element={
