@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, Calendar, Trash2, Edit, Eye } from 'lucide-react';
-import UploadAdminEvents from './UploadAdminEvents';
-import { eventService } from './services/eventService';
+import UploadAdminEvents from '../components/UploadAdminEvents';
+import { eventService } from '../../services/eventService';
 
 const AdminEvents = () => {
   const [events, setEvents] = useState([]);

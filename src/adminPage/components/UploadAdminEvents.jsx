@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Upload, X, Image as ImageIcon, Calendar, FileText } from 'lucide-react';
-import { eventService } from './services/eventService';
+import { eventService } from '../../services/eventService';
 
 const UploadAdminEvents = ({ onClose, onEventAdded }) => {
   const [formData, setFormData] = useState({

@@ -32,6 +32,19 @@ const Header = ({ onBookNow }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    // Prevent body scroll when mobile menu is open
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
+
   const navItems = [
     { name: 'Home', href: '#home' },
     { name: 'Events', href: '#events' },
@@ -49,7 +62,7 @@ const Header = ({ onBookNow }) => {
     if (href.startsWith('#')) {
       const element = document.querySelector(href);
       if (element) {
-        const headerOffset = 80; // Height of fixed header
+        const headerOffset = 80;
         const elementPosition = element.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
@@ -196,9 +209,9 @@ const Header = ({ onBookNow }) => {
         }`}
       >
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-3 items-center h-20">
+          <div className="flex lg:grid lg:grid-cols-3 items-center justify-between lg:justify-normal h-20">
             
-            {/* Left Navigation */}
+            {/* Left Navigation - Desktop Only */}
             <div className="hidden lg:flex items-center justify-start space-x-8">
               {navItems.map((item) => {
                 const isActive = activeSection === item.href.replace('#', '');
@@ -227,6 +240,7 @@ const Header = ({ onBookNow }) => {
               <button 
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 className="group flex items-center justify-center relative"
+                aria-label="Scroll to top"
               >
                 <div className="relative">
                   {/* Outer glow rings */}
@@ -234,20 +248,20 @@ const Header = ({ onBookNow }) => {
                   <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/40 to-pink-500/40 blur-xl animate-pulse"></div>
                   
                   {/* Logo container with glow animation */}
-                  <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-[#140f2d] via-purple-900 to-[#140f2d] border-2 border-purple-500/50 flex items-center justify-center group-hover:scale-110 transition-all duration-500 logo-glow overflow-hidden">
+                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-[#140f2d] via-purple-900 to-[#140f2d] border-2 border-purple-500/50 flex items-center justify-center group-hover:scale-110 transition-all duration-500 logo-glow overflow-hidden">
                     {/* Shimmer overlay */}
                     <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     
                     {/* Sparkle icon */}
-                    <Sparkles className="absolute top-1 right-1 w-3 h-3 text-purple-400 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:rotate-180" />
-                    <Sparkles className="absolute bottom-1 left-1 w-3 h-3 text-pink-400 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-rotate-180" />
+                    <Sparkles className="absolute top-1 right-1 w-2 h-2 sm:w-3 sm:h-3 text-purple-400 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:rotate-180" aria-hidden="true" />
+                    <Sparkles className="absolute bottom-1 left-1 w-2 h-2 sm:w-3 sm:h-3 text-pink-400 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-rotate-180" aria-hidden="true" />
                     
                     {/* Logo text with neon effect */}
                     <div className="text-center relative z-10">
-                      <div className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 font-black text-2xl leading-none tracking-tight neon-text">
-                        Your
+                      <div className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 font-black text-xl sm:text-2xl leading-none tracking-tight neon-text">
+                        YOUR
                       </div>
-                      <div className="text-white font-bold text-[10px] leading-none tracking-[0.2em] mt-0.5 opacity-90">
+                      <div className="text-white font-bold text-[8px] sm:text-[10px] leading-none tracking-[0.2em] mt-0.5 opacity-90">
                         NIGHTCLUB
                       </div>
                     </div>
@@ -256,7 +270,7 @@ const Header = ({ onBookNow }) => {
               </button>
             </div>
 
-            {/* Right Navigation */}
+            {/* Right Navigation - Desktop Only */}
             <div className="hidden lg:flex items-center justify-end space-x-8">
               {rightNavItems.map((item) => {
                 const isActive = item.href && activeSection === item.href.replace('#', '');
@@ -269,11 +283,12 @@ const Header = ({ onBookNow }) => {
                         ? 'relative bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 text-white px-8 py-3 rounded-full hover:from-purple-500 hover:via-pink-400 hover:to-purple-500 transform hover:scale-105 shadow-lg shadow-purple-500/50 hover:shadow-xl hover:shadow-purple-500/70 overflow-hidden group'
                         : `relative group ${isActive ? 'text-white' : 'text-[#cccbd0] hover:text-white'}`
                     }`}
+                    aria-label={item.name}
                   >
                     {item.name === 'Reservation' && (
                       <>
                         <span className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300"></span>
-                        <Sparkles className="inline-block w-4 h-4 mr-2 group-hover:rotate-180 transition-transform duration-500" />
+                        <Sparkles className="inline-block w-4 h-4 mr-2 group-hover:rotate-180 transition-transform duration-500" aria-hidden="true" />
                       </>
                     )}
                     <span className="relative z-10">{item.name}</span>
@@ -292,11 +307,12 @@ const Header = ({ onBookNow }) => {
               })}
             </div>
 
-            {/* Mobile Menu Button */}
-            <div className="lg:hidden flex justify-end">
+            {/* Mobile Menu Button - Mobile Only */}
+            <div className="lg:hidden">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="relative text-[#cccbd0] hover:text-white transition-all duration-300 p-2 rounded-lg hover:bg-purple-500/20 group"
+                aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg opacity-0 group-hover:opacity-100 blur transition-opacity duration-300"></span>
                 {isMobileMenuOpen ? (
@@ -312,7 +328,7 @@ const Header = ({ onBookNow }) => {
 
       {/* Mobile Menu */}
       <div 
-        className={`fixed inset-0 z-40 lg:hidden transition-all duration-500 ${
+        className={`fixed inset-0 z-40 lg:hidden transition-all duration-500 overflow-hidden ${
           isMobileMenuOpen 
             ? 'opacity-100 pointer-events-auto' 
             : 'opacity-0 pointer-events-none'
@@ -328,18 +344,18 @@ const Header = ({ onBookNow }) => {
         </div>
         
         {/* Menu Content */}
-        <div className={`relative flex flex-col items-center justify-center h-full space-y-6 transition-transform duration-500 ${
+        <div className={`relative flex flex-col items-center justify-center h-full px-4 space-y-6 transition-transform duration-500 ${
           isMobileMenuOpen ? 'translate-y-0' : 'translate-y-10'
         }`}>
           {/* Logo in mobile menu */}
           <div className="mb-4">
-            <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-[#140f2d] via-purple-900 to-[#140f2d] border-2 border-purple-500/50 flex items-center justify-center logo-glow">
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-[#140f2d] via-purple-900 to-[#140f2d] border-2 border-purple-500/50 flex items-center justify-center logo-glow">
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/40 to-pink-500/40 blur-xl animate-pulse"></div>
               <div className="text-center relative z-10">
-                <div className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 font-black text-3xl leading-none tracking-tight neon-text">
-                  AGWA
+                <div className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 font-black text-2xl sm:text-3xl leading-none tracking-tight neon-text">
+                  YOUR
                 </div>
-                <div className="text-white font-bold text-xs leading-none tracking-[0.2em] mt-1 opacity-90">
+                <div className="text-white font-bold text-[10px] sm:text-xs leading-none tracking-[0.2em] mt-1 opacity-90">
                   NIGHTCLUB
                 </div>
               </div>
@@ -353,20 +369,21 @@ const Header = ({ onBookNow }) => {
               <button
                 key={item.name}
                 onClick={() => item.action ? item.action() : scrollToSection(item.href)}
-                className={`font-semibold text-lg tracking-wider uppercase transition-all duration-300 transform hover:scale-105 ${
+                className={`font-semibold text-base sm:text-lg tracking-wider uppercase transition-all duration-300 transform hover:scale-105 ${
                   item.name === 'Reservation' 
-                    ? 'relative bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 text-white px-10 py-4 rounded-full shadow-lg shadow-purple-500/50 hover:shadow-xl hover:shadow-purple-500/70 group overflow-hidden'
+                    ? 'relative bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 text-white px-8 sm:px-10 py-3 sm:py-4 rounded-full shadow-lg shadow-purple-500/50 hover:shadow-xl hover:shadow-purple-500/70 group overflow-hidden'
                     : `relative group ${isActive ? 'text-white' : 'text-[#cccbd0] hover:text-white'}`
                 }`}
                 style={{
                   animationDelay: `${index * 50}ms`,
                   animation: isMobileMenuOpen ? 'fadeIn 0.5s ease-out forwards' : 'none'
                 }}
+                aria-label={item.name}
               >
                 {item.name === 'Reservation' && (
                   <>
                     <span className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300"></span>
-                    <Sparkles className="inline-block w-5 h-5 mr-2 group-hover:rotate-180 transition-transform duration-500" />
+                    <Sparkles className="inline-block w-4 h-4 sm:w-5 sm:h-5 mr-2 group-hover:rotate-180 transition-transform duration-500" aria-hidden="true" />
                   </>
                 )}
                 <span className="relative z-10">{item.name}</span>

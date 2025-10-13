@@ -67,9 +67,9 @@ Your demo already has features that will impress nightclub owners:
 **3. Add Pricing Tiers Section (2 hours)**
 - [ ] Create new component: `<PricingPlans>`
 - [ ] Show 3 packages:
-  - Basic: Website only (₱15,000 one-time)
-  - Pro: Website + booking integration (₱25,000 + ₱2K/month)
-  - Premium: Website + booking + analytics + social ads (₱35,000 + ₱5K/month)
+  - Basic: Showcase Website only (₱25,000 one-time)
+  - Pro: Website + booking integration (₱40,000 + ₱2K/month for maintenance)
+  - Premium: Website + booking + sales analytics + overall analytics + Can be customized to your needs (Price may vary) (₱60,000 + ₱5K/month)
 
 **Why:** Clients ask "how much?" in the first 5 minutes. Be ready.
 
@@ -250,9 +250,9 @@ Since you're pitching to multiple clubs, prioritize:
 
 ### **Pricing (2 minutes)**
 "Three packages:
-- Basic: ₱15,000 one-time (website only)
-- Pro: ₱25,000 + ₱2K/month (includes booking system)
-- Premium: ₱35,000 + ₱5K/month (includes ads/analytics)"
+- Basic: ₱25,000 one-time (Showcase website only)
+- Pro: ₱40,000 + ₱2K/month for maintenance (includes booking system)
+- Premium: ₱60,000 + ₱5K/month for maintenance (includes sales analytics, pricing management, and can be tailored to your needs)"
 
 ### **Timeline (1 minute)**
 "We can have YOUR version live in 2 days:
@@ -296,7 +296,7 @@ Track these to improve your pitch:
 - **Cons:** Harder initial sale
 
 ### **Option 2: One-Time Only**
-- Full Price: ₱25,000 - ₱50,000
+- Full Price: ₱100,000
 - No monthly fee
 - **Pros:** Easier to sell, client owns it
 - **Cons:** No recurring revenue

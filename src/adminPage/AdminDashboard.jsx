@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
-import AdminSidebar from './AdminSidebar';
+import AdminSidebar from './components/AdminSidebar';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();

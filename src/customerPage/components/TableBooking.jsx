@@ -292,7 +292,7 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
                       key={area.id}
                       type="button"
                       onClick={() => handleAreaClick(area)}
-                      className={`absolute w-10 h-10 text-xs font-bold text-white rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+                      className={`absolute w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-[8px] sm:text-[10px] md:text-xs font-bold text-white rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
                         isDisabled ? '' : 'hover:scale-110 cursor-pointer'
                       } ${
                         booked 
@@ -333,33 +333,33 @@ const TableBooking = ({ onClose, prefilledDate = '' }) => {
               </div>
               
               {/* Legend */}
-              <div className="flex flex-wrap gap-3 mt-4 justify-center text-xs">
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-[#140f2d] border-2 border-[#cccbd0]"></div>
+              <div className="flex flex-wrap gap-2 sm:gap-3 mt-4 justify-center text-[10px] sm:text-xs">
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#140f2d] border-2 border-[#cccbd0]"></div>
                   <span className="text-[#cccbd0]">CT ₱1.5K</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-blue-500 border-2 border-blue-400"></div>
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-blue-500 border-2 border-blue-400"></div>
                   <span className="text-[#cccbd0]">SC ₱2.5K</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-purple-500 border-2 border-purple-400"></div>
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-purple-500 border-2 border-purple-400"></div>
                   <span className="text-[#cccbd0]">VIP ₱4.5K</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 border-2 border-purple-400"></div>
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 border-2 border-purple-400"></div>
                   <span className="text-[#cccbd0]">VVIP ₱6K</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-[#cccbd0] border-2 border-white"></div>
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#cccbd0] border-2 border-white"></div>
                   <span className="text-[#cccbd0]">Selected</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-orange-500 border-2 border-orange-400"></div>
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-orange-500 border-2 border-orange-400"></div>
                   <span className="text-[#cccbd0]">Pending</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-red-600 border-2 border-red-500"></div>
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-red-600 border-2 border-red-500"></div>
                   <span className="text-[#cccbd0]">Confirmed</span>
                 </div>
               </div>

@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import CustomerLandingPage from './customerPage/CustomerLandingPage';
-import AdminLogin from './AdminLogin';
-import AdminDashboard from './AdminDashboard';
-import Bookings from './Bookings';
-import AdminEvents from './AdminEvents';
+import AdminLogin from './adminPage/AdminLogin';
+import AdminDashboard from './adminPage/AdminDashboard';
+import Bookings from './adminPage/components/Bookings';
+import AdminEvents from './adminPage/components/AdminEvents';
 
 function App() {
   return (
